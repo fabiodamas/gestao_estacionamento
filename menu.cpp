@@ -6,10 +6,7 @@
 #include <string>
 #include "tarifa.h"
 #include "movimento.h"
-
-// void gestao_tarifacao(void);
-void teste2 (void);
-
+#include "parametro.h"
 
 int main(void)
 {
@@ -39,13 +36,13 @@ int main(void)
     } 
 	while(!strchr("123456",op));
 	
-       switch(op){/*D*/
+       switch(op){
 	  case '1' : gestao_tarifacao(); break;
 	  case '2' : entradaVeiculo(); break;
 	  case '3' : saidaVeiculo(); break;
 	  case '4' : listarMovimento(); break;
 	  case '5' : ; break;
-	  case '6' : ; break;
+	  case '6' : gestao_parametro(); break;
 	  case '7' : exit(0);
        }
  }while(1);
