@@ -15,57 +15,23 @@ struct registro_mov {
    char fechado;
    char status;
    
-} reg;
+} registro_mov;
 
 FILE *fp_mov;
 
 /*prototipo das funcoes*/
 void entradaVeiculo (void);
 void saidaVeiculo (void);
-void abrirMovimento(void);
+int abrirMovimento(void);
 void listarMovimento(void);
 
-int main(void)
-{
- char opcao[2], op;
- do{
-    do{
-       printf("\n\n\n\n\n\n\n");
-       printf("\t########################################################\n");
-       printf("\t# Gestao de Estacionamento  Versao 1.0.0               #\n");
-       printf("\t#                                                      #\n");
-       printf("\t#                                                      #\n");
-       printf("\t# Entrada de Veiculo                                   #\n");
-       printf("\t########################################################\n\n\n");
-       printf("\n Digite uma das opcoes: \n\n");
-       printf("\n <I> - Entrada de Veiculo");
-       printf("\n <d> - Saida de Veiculo");
-       printf("\n <L> - Listar");
-       printf("\n <S> - Sair");
-       printf("\n\n\n Opcao:");
-       gets(opcao);
-       
-       
-       op=tolower(*opcao);
-       
-    } 
-	while(!strchr("idls",op));
-	
-       switch(op){/*D*/
-	  case 'i' : entradaVeiculo(); break;
-	  case 'd' : saidaVeiculo(); break;
-	  case 'l' : listarMovimento(); break;
-	  case 's' : exit(0);
-       }
- }while(1);
-}
 
 /*Funcoes*/
 // void abrirMovimento(const char tipo[3])
 int abrirMovimento(const char tipo[3])
 {
      if((fp_mov=fopen("D:\\gestao_estacionamento\\movimento.dat", tipo))==NULL){
-	 	printf("\n O arquivo nao pode ser aberto!!\n");
+	 	printf("\n Nao ha registros no arquivo!!\n");
       	return(0) ;
      }
      else{
@@ -83,24 +49,24 @@ void entradaVeiculo(void)
      do
      {
 	printf("\n Digite a placa (Sem o hifen) ou <FIM> para sair:\n\n");
-	gets(reg.placa);
+	gets(registro_mov.placa);
 
-	if ((strcmp(reg.placa,"fim")!=0)&&(strcmp(reg.placa,"FIM")!=0)){
+	if ((strcmp(registro_mov.placa,"fim")!=0)&&(strcmp(registro_mov.placa,"FIM")!=0)){
 
-		strcpy(reg.datasaida, myStr.c_str());
-		strcpy(reg.horasaida, myStr.c_str());
-		strcpy(reg.valor, myStr.c_str());
+		strcpy(registro_mov.datasaida, myStr.c_str());
+		strcpy(registro_mov.horasaida, myStr.c_str());
+		strcpy(registro_mov.valor, myStr.c_str());
 		
 		printf("\n Data de Entrada:"); 
-		gets(reg.dataentrada);
+		gets(registro_mov.dataentrada);
 
 		printf("\n Hora de Entrada:"); 
-		gets(reg.horaentrada);
+		gets(registro_mov.horaentrada);
 		
-	    reg.fechado='0';		    
+	    registro_mov.fechado='0';		    
 		
-		reg.status='1';
-	    reg.fechado='0';		    
+		registro_mov.status='1';
+	    registro_mov.fechado='0';		    
 	    
 		if(fwrite(&reg, sizeof(struct registro_mov), 1, fp_mov) != 1)
 		{
@@ -110,7 +76,7 @@ void entradaVeiculo(void)
 		else
 		{   printf("\n Gravacao feita com sucesso...\n\n");}
 		}
-     }while((strcmp(reg.placa,"fim")!=0)&&(strcmp(reg.placa,"FIM")!=0));
+     }while((strcmp(registro_mov.placa,"fim")!=0)&&(strcmp(registro_mov.placa,"FIM")!=0));
      fclose(fp_mov);
 }
 
@@ -125,16 +91,16 @@ void listarMovimento(void) {
 	   fread(&reg, sizeof(struct registro_mov),1, fp_mov);
 	   do
 	   {
-	      if (reg.status!='0')
+	      if (registro_mov.status!='0')
 		 {
-		    printf("\nPlaca de Entrada: %s",reg.placa);
-		    printf("\nData de Entrada.: %s",reg.dataentrada);
-		    printf("\nHora de Entrada.: %s",reg.horaentrada);
-		    printf("\nData de Saida...: %s",reg.datasaida);
-		    printf("\nHora de Saida...: %s",reg.horasaida);
-		    printf("\nValor...........: %s",reg.valor);
+		    printf("\nPlaca de Entrada: %s",registro_mov.placa);
+		    printf("\nData de Entrada.: %s",registro_mov.dataentrada);
+		    printf("\nHora de Entrada.: %s",registro_mov.horaentrada);
+		    printf("\nData de Saida...: %s",registro_mov.datasaida);
+		    printf("\nHora de Saida...: %s",registro_mov.horasaida);
+		    printf("\nValor...........: %s",registro_mov.valor);
 		    
-	        if (reg.fechado !='0') {
+	        if (registro_mov.fechado !='0') {
 	        	printf("\nFechado.........: Sim");
 	        }
 		    else{
@@ -165,8 +131,8 @@ int buscaVeiculo (void){
    {
       fread(&reg, sizeof(struct registro_mov), 1, fp_mov);
       if (!feof(fp_mov))
-	 {if (strcmp(placap, reg.placa)==0)
-	    {if (reg.status=='0')
+	 {if (strcmp(placap, registro_mov.placa)==0)
+	    {if (registro_mov.status=='0')
 	       {posicao=-2;}
 	     achou=1;
 	    }
@@ -200,28 +166,28 @@ void saidaVeiculo(void){
 		    fseek(fp_mov,pos*sizeof(struct registro_mov),SEEK_CUR);
 		    fread(&reg, sizeof(struct registro_mov), 1, fp_mov);
 		    printf("\nDados da entrada:");
-		    printf("\nPlaca..........:%s",reg.placa);
-		    printf("\nData da entrada:%s",reg.dataentrada);
-		    printf("\nHora da entrada:%s",reg.horaentrada);
+		    printf("\nPlaca..........:%s",registro_mov.placa);
+		    printf("\nData da entrada:%s",registro_mov.dataentrada);
+		    printf("\nHora da entrada:%s",registro_mov.horaentrada);
 		    printf("\nPressione qualquer tecla para continuar...");
 		    printf("\n");
 		    printf("\n");
 		    getch();
 		    
-			strcpy(reg.placa,       reg.placa);
-			strcpy(reg.dataentrada, reg.dataentrada);
-			strcpy(reg.horaentrada, reg.horaentrada);
+			strcpy(registro_mov.placa,       registro_mov.placa);
+			strcpy(registro_mov.dataentrada, registro_mov.dataentrada);
+			strcpy(registro_mov.horaentrada, registro_mov.horaentrada);
 		    
 					    
 		    printf("\nInforme os dados da saida:");		    
 		    printf("\nData de Saida: ");
-		    gets(reg.datasaida);
+		    gets(registro_mov.datasaida);
 		    
 		    printf("\nHora da Saida: ");
-		    gets(reg.horasaida);		    
+		    gets(registro_mov.horasaida);		    
 		    
-  		    reg.fechado='1';		    
-		    reg.status='1';
+  		    registro_mov.fechado='1';		    
+		    registro_mov.status='1';
 		    
 		    fseek(fp_mov,pos*sizeof(struct registro_mov),SEEK_SET);
 		    if(fwrite(&reg, sizeof(struct registro_mov),1, fp_mov)!=1)
