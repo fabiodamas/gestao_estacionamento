@@ -5,6 +5,7 @@
 #include <ctype.h>
 #include <string>
 #include "tarifa.h"
+#include "movimento.h"
 
 // void gestao_tarifacao(void);
 void teste2 (void);
@@ -26,9 +27,10 @@ int main(void)
        printf("\n <1> - Tarifacao");
        printf("\n <2> - Entrada de Veiculo");
        printf("\n <3> - Saida de Veiculo");
-       printf("\n <4> - Fechamento de Caixa");
-       printf("\n <5> - Parametros");
-       printf("\n <6> - Sair");
+       printf("\n <4> - Listar Veiculos");
+       printf("\n <5> - Fechamento de Caixa");
+       printf("\n <6> - Parametros");
+       printf("\n <7> - Sair");
        printf("\n\n\n Opcao:");
        gets(opcao);
        
@@ -39,18 +41,15 @@ int main(void)
 	
        switch(op){/*D*/
 	  case '1' : gestao_tarifacao(); break;
-	  case '2' : teste2(); break;
-	  case '3' : ; break;
-	  case '4' : ; break;
+	  case '2' : entradaVeiculo(); break;
+	  case '3' : saidaVeiculo(); break;
+	  case '4' : listarMovimento(); break;
 	  case '5' : ; break;
-	  case '6' : exit(0);
+	  case '6' : ; break;
+	  case '7' : exit(0);
        }
  }while(1);
 }
 
 
-void teste2(void)
-{   
-	printf("\n teste2");
-	getch();
-}
+
