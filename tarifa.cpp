@@ -4,14 +4,14 @@
 #include <stdlib.h>
 #include <ctype.h>
 
-struct registro {
+struct registro_tarifa {
    char hora[5]; //  char numeracao[5];
    char valor[40]; // char preco[40];
    char status;
    
 } reg;
 
-FILE *fp;
+FILE *fp_tar;
 
 /*prototipo das funcoes*/
 void incluirTarifa (void);
@@ -63,7 +63,7 @@ int main(void)
 /*Funcoes*/
 void abrirTarifa(const char tipo[3])
 {
-     if((fp=fopen("D:\\gestao_estacionamento\\tarifa.dat", tipo))==NULL)
+     if((fp_tar=fopen("D:\\gestao_estacionamento\\tarifa.dat", tipo))==NULL)
      {printf("\n O arquivo nao pode ser aberto!!\n");
       getch();
       exit(1);
@@ -73,7 +73,7 @@ void abrirTarifa(const char tipo[3])
 void incluirTarifa(void)
 {    //char *um="0";
      abrirTarifa("ab+");
-     fseek(fp,0L, SEEK_END);
+     fseek(fp_tar,0L, SEEK_END);
 
      do
      {
@@ -83,7 +83,7 @@ void incluirTarifa(void)
 	if ((strcmp(reg.hora,"fim")!=0)&&(strcmp(reg.hora,"FIM")!=0)){
 		printf("\n Valor:"); gets(reg.valor);
 		reg.status='1';
-		if(fwrite(&reg, sizeof(struct registro), 1, fp) != 1)
+		if(fwrite(&reg, sizeof(struct registro_tarifa), 1, fp_tar) != 1)
 		{
 		printf("\n Erro de gravacao!!");
 		getch();
@@ -92,7 +92,7 @@ void incluirTarifa(void)
 		{   printf("\n Gravacao feita com sucesso...\n\n");}
 		}
      }while((strcmp(reg.hora,"fim")!=0)&&(strcmp(reg.hora,"FIM")!=0));
-     fclose(fp);
+     fclose(fp_tar);
 }
 
 int busca (void){
@@ -101,11 +101,11 @@ int busca (void){
    abrirTarifa("rb");
    printf("\nDigite a hora a ser procurada:");
    gets(horap);
-   rewind(fp);
-   while((!feof(fp))&&(achou==-1))
+   rewind(fp_tar);
+   while((!feof(fp_tar))&&(achou==-1))
    {
-      fread(&reg, sizeof(struct registro), 1, fp);
-      if (!feof(fp))
+      fread(&reg, sizeof(struct registro_tarifa), 1, fp_tar);
+      if (!feof(fp_tar))
 	 {if (strcmp(horap, reg.hora)==0)
 	    {if (reg.status=='0')
 	       {posicao=-2;}
@@ -117,7 +117,7 @@ int busca (void){
    }
    if (achou==-1)
       {posicao=-1;}
-   fclose(fp);
+   fclose(fp_tar);
    return(posicao);
 }
 
@@ -137,13 +137,13 @@ void consultarTarifa(void){
 	      else
 		 {
 		    abrirTarifa("rb+");
-		    fseek(fp,pos*sizeof(struct registro),SEEK_SET);
-		    fread(&reg, sizeof(struct registro), 1, fp);
+		    fseek(fp_tar,pos*sizeof(struct registro_tarifa),SEEK_SET);
+		    fread(&reg, sizeof(struct registro_tarifa), 1, fp_tar);
 		    printf("\nHora:%s",reg.hora);
 		    printf("\nValor:%s",reg.valor);
 		    getch();
 		 }
-   fclose(fp);
+   fclose(fp_tar);
 }
 void alterarTarifa(void){
    int pos;
@@ -161,9 +161,9 @@ void alterarTarifa(void){
 	      else
 		 {
 		    abrirTarifa("rb+");
-		    fseek(fp,pos*sizeof(struct registro),SEEK_CUR);
-		    fread(&reg, sizeof(struct registro), 1, fp);
-		    printf("\nDeseja alterar o seguinte registro:");
+		    fseek(fp_tar,pos*sizeof(struct registro_tarifa),SEEK_CUR);
+		    fread(&reg, sizeof(struct registro_tarifa), 1, fp_tar);
+		    printf("\nDeseja alterar o seguinte registro_tarifa:");
 		    printf("\nHora:%s",reg.hora);
 		    printf("\nValor:%s",reg.valor);
 		    
@@ -176,8 +176,8 @@ void alterarTarifa(void){
 		    printf("\nValor:");
 		    gets(reg.valor);
 		    reg.status='1';
-		    fseek(fp,pos*sizeof(struct registro),SEEK_SET);
-		    if(fwrite(&reg, sizeof(struct registro),1, fp)!=1)
+		    fseek(fp_tar,pos*sizeof(struct registro_tarifa),SEEK_SET);
+		    if(fwrite(&reg, sizeof(struct registro_tarifa),1, fp_tar)!=1)
 		       {
 			  printf("\nErro na gravacao...");
 		       }
@@ -187,14 +187,14 @@ void alterarTarifa(void){
 			     getch();
 			  }
 		 }
-   fclose(fp);
+   fclose(fp_tar);
 }
 void listarTarifa(void) {
    int cont=0;
 
    abrirTarifa("rb");
-   fseek(fp, 0L, SEEK_SET);
-   fread(&reg, sizeof(struct registro),1, fp);
+   fseek(fp_tar, 0L, SEEK_SET);
+   fread(&reg, sizeof(struct registro_tarifa),1, fp_tar);
    do
    {
       if (reg.status!='0')
@@ -204,8 +204,8 @@ void listarTarifa(void) {
 	    printf("\n");
 	    cont++;
 	 }
-      fread(&reg, sizeof(struct registro),1, fp);
-      }while(!feof(fp));
+      fread(&reg, sizeof(struct registro_tarifa),1, fp_tar);
+      }while(!feof(fp_tar));
    printf("\n#Numero de Registros=%d",cont);
    printf("\n Pressione qualquer tecla para voltar");
    getch();
@@ -228,16 +228,16 @@ void excluirTarifa(void){
 	       else
 		  {
 		     abrirTarifa("rb+");
-		     fseek(fp, pos*sizeof(struct registro), SEEK_SET);
-		     fread(&reg, sizeof(struct registro), 1, fp);
+		     fseek(fp_tar, pos*sizeof(struct registro_tarifa), SEEK_SET);
+		     fread(&reg, sizeof(struct registro_tarifa), 1, fp_tar);
 		     printf("\nHora: %s",reg.hora);
 		     printf("\nValor: %s",reg.valor);
-		     printf("\nEste Registro #%d sera excluido",(pos+1));
+		     printf("\nEste registro_tarifa #%d sera excluido",(pos+1));
 		     getch();
 		     //strcpy(reg.status,"0");
 		     reg.status='0';
-		     fseek(fp, pos*sizeof(struct registro), SEEK_SET);
-		     if(fwrite(&reg, sizeof(struct registro), 1, fp)!=1)
+		     fseek(fp_tar, pos*sizeof(struct registro_tarifa), SEEK_SET);
+		     if(fwrite(&reg, sizeof(struct registro_tarifa), 1, fp_tar)!=1)
 			{
 			   printf("\nErro na gravacao...");
 			   getch();
@@ -249,6 +249,6 @@ void excluirTarifa(void){
 			}
 		  }
 	 }
-   fclose(fp);
+   fclose(fp_tar);
 }
 

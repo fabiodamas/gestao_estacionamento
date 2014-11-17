@@ -4,8 +4,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string>
-
-struct registro {
+ 
+struct registro_mov {
    char placa[20]; 
    char dataentrada[20]; 
    char horaentrada[20]; 
@@ -17,7 +17,7 @@ struct registro {
    
 } reg;
 
-FILE *fp;
+FILE *fp_mov;
 
 /*prototipo das funcoes*/
 void entradaVeiculo (void);
@@ -64,7 +64,7 @@ int main(void)
 // void abrirMovimento(const char tipo[3])
 int abrirMovimento(const char tipo[3])
 {
-     if((fp=fopen("D:\\gestao_estacionamento\\movimento.dat", tipo))==NULL){
+     if((fp_mov=fopen("D:\\gestao_estacionamento\\movimento.dat", tipo))==NULL){
 	 	printf("\n O arquivo nao pode ser aberto!!\n");
       	return(0) ;
      }
@@ -78,7 +78,7 @@ void entradaVeiculo(void)
 	 std::string myStr = "";
 	
      abrirMovimento("ab+");
-     fseek(fp,0L, SEEK_END);
+     fseek(fp_mov,0L, SEEK_END);
 
      do
      {
@@ -102,7 +102,7 @@ void entradaVeiculo(void)
 		reg.status='1';
 	    reg.fechado='0';		    
 	    
-		if(fwrite(&reg, sizeof(struct registro), 1, fp) != 1)
+		if(fwrite(&reg, sizeof(struct registro_mov), 1, fp_mov) != 1)
 		{
 		printf("\n Erro de gravacao!!");
 		getch();
@@ -111,7 +111,7 @@ void entradaVeiculo(void)
 		{   printf("\n Gravacao feita com sucesso...\n\n");}
 		}
      }while((strcmp(reg.placa,"fim")!=0)&&(strcmp(reg.placa,"FIM")!=0));
-     fclose(fp);
+     fclose(fp_mov);
 }
 
 void listarMovimento(void) {
@@ -121,8 +121,8 @@ void listarMovimento(void) {
    qtd = abrirMovimento("rb");
    
    if (qtd!=0) {
-	   fseek(fp, 0L, SEEK_SET);
-	   fread(&reg, sizeof(struct registro),1, fp);
+	   fseek(fp_mov, 0L, SEEK_SET);
+	   fread(&reg, sizeof(struct registro_mov),1, fp_mov);
 	   do
 	   {
 	      if (reg.status!='0')
@@ -144,9 +144,9 @@ void listarMovimento(void) {
 		    printf("\n");
 		    cont++;
 		 }
-	      fread(&reg, sizeof(struct registro),1, fp);
-	      }while(!feof(fp));
-	   printf("\n#Numero de Registros=%d",cont);
+	      fread(&reg, sizeof(struct registro_mov),1, fp_mov);
+	      }while(!feof(fp_mov));
+	   printf("\n#Numero de registro_movs=%d",cont);
 	   printf("\n Pressione qualquer tecla para voltar");
 	   getch();   	
    }
@@ -160,11 +160,11 @@ int buscaVeiculo (void){
    abrirMovimento("rb");
    printf("\nDigite a placa (sem o hifen):");
    gets(placap);
-   rewind(fp);
-   while((!feof(fp))&&(achou==-1))
+   rewind(fp_mov);
+   while((!feof(fp_mov))&&(achou==-1))
    {
-      fread(&reg, sizeof(struct registro), 1, fp);
-      if (!feof(fp))
+      fread(&reg, sizeof(struct registro_mov), 1, fp_mov);
+      if (!feof(fp_mov))
 	 {if (strcmp(placap, reg.placa)==0)
 	    {if (reg.status=='0')
 	       {posicao=-2;}
@@ -176,7 +176,7 @@ int buscaVeiculo (void){
    }
    if (achou==-1)
       {posicao=-1;}
-   fclose(fp);
+   fclose(fp_mov);
    return(posicao);
 }
 
@@ -197,8 +197,8 @@ void saidaVeiculo(void){
 	      else
 		 {
 		    abrirMovimento("rb+");
-		    fseek(fp,pos*sizeof(struct registro),SEEK_CUR);
-		    fread(&reg, sizeof(struct registro), 1, fp);
+		    fseek(fp_mov,pos*sizeof(struct registro_mov),SEEK_CUR);
+		    fread(&reg, sizeof(struct registro_mov), 1, fp_mov);
 		    printf("\nDados da entrada:");
 		    printf("\nPlaca..........:%s",reg.placa);
 		    printf("\nData da entrada:%s",reg.dataentrada);
@@ -223,8 +223,8 @@ void saidaVeiculo(void){
   		    reg.fechado='1';		    
 		    reg.status='1';
 		    
-		    fseek(fp,pos*sizeof(struct registro),SEEK_SET);
-		    if(fwrite(&reg, sizeof(struct registro),1, fp)!=1)
+		    fseek(fp_mov,pos*sizeof(struct registro_mov),SEEK_SET);
+		    if(fwrite(&reg, sizeof(struct registro_mov),1, fp_mov)!=1)
 		       {
 			  printf("\nErro na gravacao...");
 		       }
@@ -234,7 +234,7 @@ void saidaVeiculo(void){
 			     getch();
 			  }
 		 }
-   fclose(fp);
+   fclose(fp_mov);
 }
 
 
