@@ -28,13 +28,13 @@ int main(void)
        printf("\n <5> - Fechamento de Caixa");
        printf("\n <6> - Parametros");
        printf("\n <7> - Sair");
-       printf("\n\n\n Opcao:");
+       printf("\n\n\n Opcao\:");
        gets(opcao);
        
        
        op=tolower(*opcao);       
     } 
-	while(!strchr("123456",op));
+	while(!strchr("1234567",op));
 	
        switch(op){
 	  case '1' : gestao_tarifacao(); break;
