@@ -68,7 +68,7 @@ void entradaVeiculo(void)
 		registro_mov.status='1';
 	    registro_mov.fechado='0';		    
 	    
-		if(fwrite(&reg, sizeof(struct registro_mov), 1, fp_mov) != 1)
+		if(fwrite(&registro_mov, sizeof(struct registro_mov), 1, fp_mov) != 1)
 		{
 		printf("\n Erro de gravacao!!");
 		getch();
@@ -88,7 +88,7 @@ void listarMovimento(void) {
    
    if (qtd!=0) {
 	   fseek(fp_mov, 0L, SEEK_SET);
-	   fread(&reg, sizeof(struct registro_mov),1, fp_mov);
+	   fread(&registro_mov, sizeof(struct registro_mov),1, fp_mov);
 	   do
 	   {
 	      if (registro_mov.status!='0')
@@ -110,7 +110,7 @@ void listarMovimento(void) {
 		    printf("\n");
 		    cont++;
 		 }
-	      fread(&reg, sizeof(struct registro_mov),1, fp_mov);
+	      fread(&registro_mov, sizeof(struct registro_mov),1, fp_mov);
 	      }while(!feof(fp_mov));
 	   printf("\n#Numero de registro_movs=%d",cont);
 	   printf("\n Pressione qualquer tecla para voltar");
@@ -129,7 +129,7 @@ int buscaVeiculo (void){
    rewind(fp_mov);
    while((!feof(fp_mov))&&(achou==-1))
    {
-      fread(&reg, sizeof(struct registro_mov), 1, fp_mov);
+      fread(&registro_mov, sizeof(struct registro_mov), 1, fp_mov);
       if (!feof(fp_mov))
 	 {if (strcmp(placap, registro_mov.placa)==0)
 	    {if (registro_mov.status=='0')
@@ -164,7 +164,7 @@ void saidaVeiculo(void){
 		 {
 		    abrirMovimento("rb+");
 		    fseek(fp_mov,pos*sizeof(struct registro_mov),SEEK_CUR);
-		    fread(&reg, sizeof(struct registro_mov), 1, fp_mov);
+		    fread(&registro_mov, sizeof(struct registro_mov), 1, fp_mov);
 		    printf("\nDados da entrada:");
 		    printf("\nPlaca..........:%s",registro_mov.placa);
 		    printf("\nData da entrada:%s",registro_mov.dataentrada);
@@ -190,7 +190,7 @@ void saidaVeiculo(void){
 		    registro_mov.status='1';
 		    
 		    fseek(fp_mov,pos*sizeof(struct registro_mov),SEEK_SET);
-		    if(fwrite(&reg, sizeof(struct registro_mov),1, fp_mov)!=1)
+		    if(fwrite(&registro_mov, sizeof(struct registro_mov),1, fp_mov)!=1)
 		       {
 			  printf("\nErro na gravacao...");
 		       }
