@@ -21,43 +21,43 @@ void alterarTarifa(void);
 void abrirTarifa(void);
 void listarTarifa(void);
 
-int main(void)
+int gestao_tarifacao(void)
 {
  char opcao[2], op;
- do{
     do{
-       printf("\n\n\n\n\n\n\n");
-       printf("\t########################################################\n");
-       printf("\t# Gestao de Estacionamento  Versao 1.0.0               #\n");
-       printf("\t#                                                      #\n");
-       printf("\t#                                                      #\n");
-       printf("\t# Manutencao de Tarifas                                #\n");
-       printf("\t########################################################\n\n\n");
-       printf("\n Digite uma das opcoes: \n\n");
-       printf("\n <I> - Incluir");
-       printf("\n <A> - Alterar");
-       printf("\n <E> - Excluir");
-       printf("\n <C> - Consultar");
-       printf("\n <L> - Listar");
-       printf("\n <S> - Sair");
-       printf("\n\n\n Opcao:");
-       gets(opcao);
-       
-       
-       op=tolower(*opcao);
-       
-    } 
-	while(!strchr("iaeclsh",op));
-	
-       switch(op){/*D*/
-	  case 'i' : incluirTarifa(); break;
-	  case 'a' : alterarTarifa(); break;
-	  case 'e' : excluirTarifa(); break;
-	  case 'c' : consultarTarifa(); break;
-	  case 'l' : listarTarifa(); break;
-	  case 's' : exit(0);
-       }
- }while(1);
+		do{
+	       printf("\n\n\n\n\n\n\n");
+	       printf("\t########################################################\n");
+	       printf("\t# Gestao de Estacionamento  Versao 1.0.0               #\n");
+	       printf("\t#                                                      #\n");
+	       printf("\t#                                                      #\n");
+	       printf("\t# Manutencao de Tarifas                                #\n");
+	       printf("\t########################################################\n\n\n");
+	       printf("\n Digite uma das opcoes: \n\n");
+	       printf("\n <1> - Incluir");
+	       printf("\n <2> - Alterar");
+	       printf("\n <3> - Excluir");
+	       printf("\n <4> - Consultar");
+	       printf("\n <5> - Listar");
+	       printf("\n <6> - Voltar");
+	       printf("\n\n\n Opcao:");
+	       gets(opcao);
+	       
+	       
+	       op=tolower(*opcao);
+	       
+	    } 
+		while(!strchr("123456",op));
+		
+	     switch(op){/*D*/
+		  case '1' : incluirTarifa(); break;
+		  case '2' : alterarTarifa(); break;
+		  case '3' : excluirTarifa(); break;
+		  case '4' : consultarTarifa(); break;
+		  case '5' : listarTarifa(); break;
+		  case '6' : return(0); break;
+	    }
+	} while(1);	
 }
 
 /*Funcoes*/
