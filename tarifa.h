@@ -61,13 +61,16 @@ int gestao_tarifacao(void)
 }
 
 /*Funcoes*/
-void abrirTarifa(const char tipo[3])
+int abrirTarifa(const char tipo[3])
 {
-     if((fp_tar=fopen("D:\\gestao_estacionamento\\tarifa.dat", tipo))==NULL)
-     {printf("\n O arquivo nao pode ser aberto!!\n");
-      getch();
-      exit(1);
+     if((fp_tar=fopen("D:\\gestao_estacionamento\\tarifa.dat", tipo))==NULL){
+	 	printf("\n Nao ha registros no arquivo !!\n");
+      	return(0) ;
      }
+     else{
+     	return(1);
+     }  
+	      
 }
 
 void incluirTarifa(void)
@@ -191,24 +194,28 @@ void alterarTarifa(void){
 }
 void listarTarifa(void) {
    int cont=0;
+   int qtd;
+   
+   qtd = abrirTarifa("rb");
 
-   abrirTarifa("rb");
-   fseek(fp_tar, 0L, SEEK_SET);
-   fread(&reg, sizeof(struct registro_tarifa),1, fp_tar);
-   do
-   {
-      if (reg.status!='0')
-	 {
-	    printf("\nHora..: %s",reg.hora);
-	    printf("\nValor.: %s",reg.valor);
-	    printf("\n");
-	    cont++;
-	 }
-      fread(&reg, sizeof(struct registro_tarifa),1, fp_tar);
-      }while(!feof(fp_tar));
-   printf("\n#Numero de Registros=%d",cont);
-   printf("\n Pressione qualquer tecla para voltar");
-   getch();
+   if (qtd!=0) {   
+   	 fseek(fp_tar, 0L, SEEK_SET);
+	 fread(&reg, sizeof(struct registro_tarifa),1, fp_tar);
+	   do
+	   {
+	      if (reg.status!='0')
+		 {
+		    printf("\nHora..: %s",reg.hora);
+		    printf("\nValor.: %s",reg.valor);
+		    printf("\n");
+		    cont++;
+		 }
+	      fread(&reg, sizeof(struct registro_tarifa),1, fp_tar);
+	      }while(!feof(fp_tar));
+	   printf("\n#Numero de Registros=%d",cont);
+	   printf("\n Pressione qualquer tecla para voltar");
+	   getch();
+  }
 }
 void excluirTarifa(void){
    int pos;
