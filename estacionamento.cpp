@@ -3,117 +3,110 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
+
 struct registro {
-   char marca[40];
-   char numeracao[5];
-   char tipo[20];
-   char cor[20];
-   char preco[40];
+   char hora[5]; //  char numeracao[5];
+   char valor[40]; // char preco[40];
    char status;
-   } reg;
+   
+} reg;
+
 FILE *fp;
+
 /*prototipo das funcoes*/
-void incluir (void);
-void consultar(void);
-void excluir(void);
-void alterar(void);
-void abrir(void);
-void listar(void);
-void help(void);
+void incluirTarifa (void);
+void consultarTarifa(void);
+void excluirTarifa(void);
+void alterarTarifa(void);
+void abrirTarifa(void);
+void listarTarifa(void);
 
 int main(void)
 {
  char opcao[2], op;
  do{
     do{
-       
        printf("\n\n\n\n\n\n\n");
        printf("\t########################################################\n");
-       printf("\t#        					       #\n");
-       printf("\t#     Programa de Cadastro de Sapatos Versao 1.13      #\n");
+       printf("\t# Gestao de Estacionamento  Versao 1.0.0               #\n");
        printf("\t#                                                      #\n");
+       printf("\t#                                                      #\n");
+       printf("\t# Manutencao de Tarifas                                #\n");
        printf("\t########################################################\n\n\n");
-       printf("\n Digite uma das op‡oes\n\n");
+       printf("\n Digite uma das opcoes: \n\n");
        printf("\n <I> - Incluir");
        printf("\n <A> - Alterar");
        printf("\n <E> - Excluir");
        printf("\n <C> - Consultar");
        printf("\n <L> - Listar");
-       printf("\n <H> - Ajuda");
        printf("\n <S> - Sair");
-       printf("\n\n\n Op‡ao:");
+       printf("\n\n\n Opcao:");
        gets(opcao);
+       
+       
        op=tolower(*opcao);
-    } while(!strchr("iaeclsh",op));
+       
+    } 
+	while(!strchr("iaeclsh",op));
+	
        switch(op){/*D*/
-	  case 'i' : incluir(); break;
-	  case 'a' : alterar(); break;
-	  case 'e' : excluir(); break;
-	  case 'c' : consultar(); break;
-	  case 'l' : listar(); break;
+	  case 'i' : incluirTarifa(); break;
+	  case 'a' : alterarTarifa(); break;
+	  case 'e' : excluirTarifa(); break;
+	  case 'c' : consultarTarifa(); break;
+	  case 'l' : listarTarifa(); break;
 	  case 's' : exit(0);
-	  case 'h' : help(); break;
        }
  }while(1);
 }
-		    /*Fun‡oes*/
-void help(void) {
-	
-	printf("\a\n\n\n\n\n\n\n");
-	printf("\t########################################################\n");
-	printf("\t# Programa feito por.: KrowniX                         #\n");
-	printf("\t# Qualquer d£vida/erro entre em contato krownix@lab.br #\n");
-	printf("\t########################################################\n\n\n");
-	printf("\t\t\tTecle <ENTER> para voltar");
-	getch();
-}
-void abrir(char tipo[3])
+
+/*Funcoes*/
+void abrirTarifa(const char tipo[3])
 {
-     if((fp=fopen("C:\\tmp\\sapato.dat", tipo))==NULL)
+     if((fp=fopen("D:\\gestao_estacionamento\\tarifa.dat", tipo))==NULL)
      {printf("\n O arquivo nao pode ser aberto!!\n");
       getch();
       exit(1);
      }
 }
-void incluir(void)
+
+void incluirTarifa(void)
 {    //char *um="0";
-     abrir("ab+");
+     abrirTarifa("ab+");
      fseek(fp,0L, SEEK_END);
 
      do
      {
-	printf("\n Digite o marca ou <FIM> para sair:\n\n");
-	gets(reg.marca);
+	printf("\n Digite a hora ou <FIM> para sair:\n\n");
+	gets(reg.hora);
 
-	if ((strcmp(reg.marca,"fim")!=0)&&(strcmp(reg.marca,"FIM")!=0)){
-		printf("\n Numero:"); gets(reg.numeracao);
-		printf("\n Tipo:"); gets(reg.tipo);
-		printf("\n Cor:"); gets(reg.cor);
-		printf("\n Pre‡o:"); gets(reg.preco);
+	if ((strcmp(reg.hora,"fim")!=0)&&(strcmp(reg.hora,"FIM")!=0)){
+		printf("\n Valor:"); gets(reg.valor);
 		reg.status='1';
 		if(fwrite(&reg, sizeof(struct registro), 1, fp) != 1)
 		{
-		printf("\n Erro de grava‡Æo!!");
+		printf("\n Erro de gravacao!!");
 		getch();
 		}
 		else
-		{   printf("\n Grava‡Æo feita com sucesso...\n\n");}
+		{   printf("\n Gravacao feita com sucesso...\n\n");}
 		}
-     }while((strcmp(reg.marca,"fim")!=0)&&(strcmp(reg.marca,"FIM")!=0));
+     }while((strcmp(reg.hora,"fim")!=0)&&(strcmp(reg.hora,"FIM")!=0));
      fclose(fp);
 }
+
 int busca (void){
    int achou=-1,posicao=0;
-   char marcap[40];
-   abrir("rb");
-   printf("\nDigite o marca a ser procurada:");
-   gets(marcap);
+   char horap[5];
+   abrirTarifa("rb");
+   printf("\nDigite a hora a ser procurada:");
+   gets(horap);
    rewind(fp);
    while((!feof(fp))&&(achou==-1))
    {
       fread(&reg, sizeof(struct registro), 1, fp);
       if (!feof(fp))
-	 {if (strcmp(marcap, reg.marca)==0)
+	 {if (strcmp(horap, reg.hora)==0)
 	    {if (reg.status=='0')
 	       {posicao=-2;}
 	     achou=1;
@@ -127,69 +120,61 @@ int busca (void){
    fclose(fp);
    return(posicao);
 }
-void consultar(void){
+
+void consultarTarifa(void){
    int pos;
    pos=busca();
    if(pos==-1)
       {
-	 printf("\nSapato inexistente no arquivo!");
+	 printf("\n Hora inexistente no arquivo!");
 	 getch();
       }
       else if(pos==-2)
 	      {
-		 printf("\nSapato inexistente no arquivo!");
+		 printf("\n Hora inexistente no arquivo!");
 		 getch();
 	      }
 	      else
 		 {
-		    abrir("rb+");
+		    abrirTarifa("rb+");
 		    fseek(fp,pos*sizeof(struct registro),SEEK_SET);
 		    fread(&reg, sizeof(struct registro), 1, fp);
-		    printf("\nMarca:%s",reg.marca);
-		    printf("\nNumero:%s",reg.numeracao);
-		    printf("\nTipo:%s",reg.tipo);
-		    printf("\nCor:%s",reg.cor);
-		    printf("\nPre‡o:%s",reg.preco);
+		    printf("\nHora:%s",reg.hora);
+		    printf("\nValor:%s",reg.valor);
 		    getch();
 		 }
    fclose(fp);
 }
-void alterar(void){
+void alterarTarifa(void){
    int pos;
    pos=busca();
    if (pos==-1)
       {
-	 printf("\nSapato inexistente no arquivo");
+	 printf("\nHora inexistente no arquivo");
 	 getch();
       }
       else if(pos==-2)
 	      {
-		 printf("\nSapato inexistente no arquivo!");
+		 printf("\nHora inexistente no arquivo!");
 		 getch();
 	      }
 	      else
 		 {
-		    abrir("rb+");
+		    abrirTarifa("rb+");
 		    fseek(fp,pos*sizeof(struct registro),SEEK_CUR);
 		    fread(&reg, sizeof(struct registro), 1, fp);
-		    printf("\nDeseja alterar o seguinte registro...");
-		    printf("\nSapato:%s",reg.marca);
-		    printf("\nNumero:%s",reg.numeracao);
-		    printf("\nTipo:%s",reg.tipo);
-		    printf("\nCor:%s",reg.cor);
-		    printf("\nPre‡o:%s",reg.preco);
+		    printf("\nDeseja alterar o seguinte registro:");
+		    printf("\nHora:%s",reg.hora);
+		    printf("\nValor:%s",reg.valor);
+		    
+		    printf("\nPressione qualquer tecla para continuar...");
+		    printf("\n");
 		    getch();
 		    printf("\nDigite as informacoes corretas:");
-		    printf("\nSapato:");
-		    gets(reg.marca);
-		    printf("\nNumero:");
-		    gets(reg.numeracao);
-		    printf("\nTipo:");
-		    gets(reg.tipo);
-		    printf("\nCor:");
-		    gets(reg.cor);
-		    printf("\nPre‡o:");
-		    gets(reg.preco);
+		    printf("\nHora:");
+		    gets(reg.hora);
+		    printf("\nValor:");
+		    gets(reg.valor);
 		    reg.status='1';
 		    fseek(fp,pos*sizeof(struct registro),SEEK_SET);
 		    if(fwrite(&reg, sizeof(struct registro),1, fp)!=1)
@@ -204,53 +189,49 @@ void alterar(void){
 		 }
    fclose(fp);
 }
-void listar(void) {
+void listarTarifa(void) {
    int cont=0;
 
-   abrir("rb");
+   abrirTarifa("rb");
    fseek(fp, 0L, SEEK_SET);
    fread(&reg, sizeof(struct registro),1, fp);
    do
    {
       if (reg.status!='0')
 	 {
-	    printf("\nMarca: %s",reg.marca);
-	    printf("\nNumero: %s",reg.numeracao);
-	    printf("\nTipo: %s",reg.tipo);
-	    printf("\nCor: %s",reg.cor);
-	    printf("\nPre‡o: %s",reg.preco);
+	    printf("\nHora..: %s",reg.hora);
+	    printf("\nValor.: %s",reg.valor);
+	    printf("\n");
 	    cont++;
 	 }
       fread(&reg, sizeof(struct registro),1, fp);
       }while(!feof(fp));
    printf("\n#Numero de Registros=%d",cont);
+   printf("\n Pressione qualquer tecla para voltar");
    getch();
 }
-void excluir(void){
+void excluirTarifa(void){
    int pos;
    pos=busca();
    if(pos==-1)
       {
-	 printf("\nSapato inexistente no arquivo");
+	 printf("\nHora inexistente no arquivo");
 	 getch();
       }
       else
 	 {
 	    if(pos==-2)
 	       {
-		  printf("\nSapato excluido do arquivo");
+		  printf("\nHora excluida do arquivo");
 		  getch();
 	       }
 	       else
 		  {
-		     abrir("rb+");
+		     abrirTarifa("rb+");
 		     fseek(fp, pos*sizeof(struct registro), SEEK_SET);
 		     fread(&reg, sizeof(struct registro), 1, fp);
-		     printf("\nMarca: %s",reg.marca);
-		     printf("\nNumero: %s",reg.numeracao);
-		     printf("\nTipo: %s",reg.tipo);
-		     printf("\nCor: %s",reg.cor);
-		     printf("\nPre‡o: %s",reg.preco);
+		     printf("\nHora: %s",reg.hora);
+		     printf("\nValor: %s",reg.valor);
 		     printf("\nEste Registro #%d sera excluido",(pos+1));
 		     getch();
 		     //strcpy(reg.status,"0");
@@ -258,7 +239,7 @@ void excluir(void){
 		     fseek(fp, pos*sizeof(struct registro), SEEK_SET);
 		     if(fwrite(&reg, sizeof(struct registro), 1, fp)!=1)
 			{
-			   printf("\nErro na grava‡ao...");
+			   printf("\nErro na gravacao...");
 			   getch();
 			}
 			else
@@ -270,3 +251,4 @@ void excluir(void){
 	 }
    fclose(fp);
 }
+
